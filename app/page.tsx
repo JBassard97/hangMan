@@ -5,7 +5,7 @@ import "./Home.scss";
 export default function Home() {
   return (
     <div className="home-page">
-      <h1>Hangman 69</h1>
+      <h2>Hangman 69</h2>
       <Gallows />
       <Keyboard />
     </div>
