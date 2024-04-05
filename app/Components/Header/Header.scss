@@ -1,12 +1,10 @@
 @import "../../globals.scss";
 
 .full-header {
-  @include wireframe;
   display: flex;
   align-items: center;
 
   ul {
-    @include wireframe;
     padding: 0;
     margin: 5px;
     width: 100%;
@@ -17,8 +15,10 @@
     align-items: center;
 
     .navLink {
-        @include wireframe;
+      @include wireframe;
+      @include center-items;
+      width: 80%;
+      height: 100%;
     }
-    
   }
 }

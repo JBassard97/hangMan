@@ -1,0 +1,10 @@
+@import "../../globals.scss";
+
+.full-gallows {
+    @include wireframe;
+    width: 90%;
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

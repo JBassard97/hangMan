@@ -1,7 +1,13 @@
+import Keyboard from "./Components/Keyboard/Keyboard";
+import Gallows from "./Components/Gallows/Gallows";
+import "./Home.scss";
+
 export default function Home() {
   return (
-    <>
-      <h1>Home</h1>
-    </>
+    <div className="home-page">
+      <h1>Hangman 69</h1>
+      <Gallows />
+      <Keyboard />
+    </div>
   );
 }
