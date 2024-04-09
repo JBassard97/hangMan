@@ -2,18 +2,15 @@
 
 .full-keyboard {
   @include wireframe;
-  height: 25%;
-  width: 95%;
-  position: absolute;
-  bottom: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  padding-top: 1%;
   opacity: 0.2;
   transition: opacity 0.2s ease;
   margin-bottom: 5px;
+  width: 100%;
+  height: 25%;
 
   .key-row1, .key-row2, .key-row3 {
     // @include wireframe;
@@ -24,6 +21,6 @@
   }
 
   .key-row3 {
-    padding: 0px 4px;
+    padding: 0px .5em;
   }
 }

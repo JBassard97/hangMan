@@ -9,6 +9,7 @@ const Gallows = () => {
   const [gameMode, setGameMode] = useState(null);
   const [gameModeSelected, setGameModeSelected] = useState(false);
   const [wordInput, setWordInput] = useState("");
+  const [submittedWord, setSubmittedWord] = useState("");
 
   const handleBeginClick = () => {
     setShowModal(true);
@@ -29,8 +30,9 @@ const Gallows = () => {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    console.log("Word or phrase submitted:", wordInput);
-    // setWordInput("");
+    setSubmittedWord(wordInput);
+    setWordInput("");
+    setShowModal(false);
   };
 
   return (
@@ -76,6 +78,22 @@ const Gallows = () => {
               </div>
             )}
           </Modal>
+        </div>
+      )}
+      {submittedWord && (
+        <div className="word-container">
+          {submittedWord.split(" ").map((word, index) => (
+            <div key={index} className="word-wrapper">
+              {word.split("").map((letter, i) => (
+                <span key={`${index}-${i}`} className="letter-container">
+                  <span className="letter">
+                    {letter === " " ? "\u00A0" : letter}
+                  </span>
+                  {letter !== " " && <span className="underline"></span>}
+                </span>
+              ))}
+            </div>
+          ))}
         </div>
       )}
     </div>

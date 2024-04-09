@@ -2,10 +2,40 @@
 
 .full-gallows {
     @include wireframe;
-    width: 90%;
-    height: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.word-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.word-wrapper {
+  display: flex;
+  margin-right: 1.8rem; // Adjust the spacing between words
+}
+
+.letter-container {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 0.25rem;
+}
+
+.letter {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.underline {
+  width: 2rem;
+  height: 0.25rem;
+  background-color: black;
+  margin-top: 0.25rem;
 }
