@@ -32,6 +32,14 @@
     .close-button {
       @include wireframe;
       cursor: pointer;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .modal-children {
+      display: flex;
+      flex-direction: column;
     }
   }
 }

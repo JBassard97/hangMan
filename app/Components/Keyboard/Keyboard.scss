@@ -1,16 +1,15 @@
 @import "../../globals.scss";
 
 .full-keyboard {
-  @include wireframe;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
-  opacity: 0.2;
+  opacity: 0.1;
   transition: opacity 0.2s ease;
-  margin-bottom: 5px;
   width: 100%;
   height: 25%;
+  color: white;
 
   .key-row1, .key-row2, .key-row3 {
     // @include wireframe;

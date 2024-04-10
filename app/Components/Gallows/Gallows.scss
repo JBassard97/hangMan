@@ -1,11 +1,12 @@
 @import "../../globals.scss";
 
 .full-gallows {
-    @include wireframe;
+    // @include wireframe;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    height: 68%;
 }
 
 .word-container {
@@ -17,7 +18,7 @@
 
 .word-wrapper {
   display: flex;
-  margin-right: 1.8rem; // Adjust the spacing between words
+  margin: 0 0.9rem;
 }
 
 .letter-container {
@@ -31,11 +32,23 @@
 .letter {
   font-size: 2rem;
   font-weight: bold;
+  color: white;
+  opacity: 0; // will uncomment once responsive
 }
 
 .underline {
   width: 2rem;
   height: 0.25rem;
-  background-color: black;
+  background-color: white;
   margin-top: 0.25rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.multi-submit {
+  margin-top: 6px;
 }
