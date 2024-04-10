@@ -39,6 +39,7 @@ export default Keyboard;
 // import Keycap from "./Keycap/Keycap";
 // import "./Keyboard.scss";
 
+
 // export default function Keyboard() {
 //   const row1 = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"];
 //   const row2 = ["A", "S", "D", "F", "G", "H", "J", "K", "L"];

@@ -4,16 +4,12 @@
 import React from "react";
 import "./Keycap.scss";
 
-const Keycap = ({ letter }: { letter: string }) => {
-  const handleClick = () => {
-    console.log(letter);
-  };
+interface KeycapProps {
+  letter: string;
+}
 
-  return (
-    <div className="keycap" onClick={handleClick}>
-      {letter}
-    </div>
-  );
+const Keycap = ({ letter }: KeycapProps) => {
+  return <div className="keycap">{letter}</div>;
 };
 
 export default Keycap;
