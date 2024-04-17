@@ -1,21 +1,48 @@
 "use client";
-import React, { useState, MutableRefObject } from "react";
+import React, { useState, useEffect, MutableRefObject } from "react";
 import Modal from "../Modal/Modal";
 import "./Gallows.scss";
 
 interface GallowsProps {
   keyboardRef: MutableRefObject<HTMLDivElement | null>;
+  clickedLetter: string;
 }
 
-const Gallows = ({ keyboardRef }: GallowsProps) => {
-  const [showModal, setShowModal] = useState(false);
-  const [beginButtonVisible, setBeginButtonVisible] = useState(true);
-  const [gameMode, setGameMode] = useState(null);
-  const [gameModeSelected, setGameModeSelected] = useState(false);
-  const [wordInput, setWordInput] = useState("");
-  const [submittedWord, setSubmittedWord] = useState("");
+const Gallows = ({ keyboardRef, clickedLetter }: GallowsProps) => {
+  const [showModal, setShowModal] = useState(false); // State to toggle modal show
+  const [beginButtonVisible, setBeginButtonVisible] = useState(true); // State to show or hide begin button
+  const [gameMode, setGameMode] = useState(null); // Single or Multi
+  const [gameModeSelected, setGameModeSelected] = useState(false); // Did the user select a game mode
+  const [wordInput, setWordInput] = useState(""); // Word inputted in modal form
+  const [submittedWord, setSubmittedWord] = useState(""); // Word submitted and later looped over
+  const [guessedLetters, setGuessedLetters] = useState<string[]>([]); // State for guessed letters
+  const [incorrectStrikes, setIncorrectStrikes] = useState(0);
 
   let maxInputLength = 30;
+
+  useEffect(() => {
+    if (clickedLetter) {
+      console.log("Letter Clicked:", clickedLetter);
+      // Add the clicked letter to the guessedLetters array
+      setGuessedLetters((prevGuessedLetters) => [
+        ...prevGuessedLetters,
+        clickedLetter,
+      ]);
+    }
+
+    // Increment incorrectStrikes if the clickedLetter is not in submittedWord
+    if (submittedWord && !submittedWord.includes(clickedLetter)) {
+      setIncorrectStrikes((prevStrikes) => prevStrikes + 1);
+    }
+  }, [clickedLetter]);
+
+  useEffect(() => {
+    console.log("Guessed Letters:", guessedLetters);
+  }, [guessedLetters]);
+
+  useEffect(() => {
+    console.log("Incorrect Strikes:", incorrectStrikes);
+  }, [incorrectStrikes]);
 
   const handleBeginClick = () => {
     setShowModal(true);
@@ -36,7 +63,7 @@ const Gallows = ({ keyboardRef }: GallowsProps) => {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    setSubmittedWord(wordInput);
+    setSubmittedWord(wordInput.toUpperCase());
     setWordInput("");
     setShowModal(false);
     if (keyboardRef.current) {
@@ -116,6 +143,7 @@ const Gallows = ({ keyboardRef }: GallowsProps) => {
                   </g>
                 </g>
                 <line
+                  id="spine"
                   x1="200"
                   y1="100"
                   x2="200"
@@ -160,6 +188,8 @@ const Gallows = ({ keyboardRef }: GallowsProps) => {
                   strokeWidth="4"
                 />
               </g>
+              {/* End of body */}
+              {/* Rest of SVG should STAY */}
               <line
                 x1="10"
                 y1="250"
@@ -200,7 +230,12 @@ const Gallows = ({ keyboardRef }: GallowsProps) => {
               <div key={index} className="word-wrapper">
                 {word.split("").map((letter, i) => (
                   <span key={`${index}-${i}`} className="letter-container">
-                    <span className="letter">
+                    <span
+                      className="letter"
+                      style={{
+                        opacity: guessedLetters.includes(letter) ? 1 : 0,
+                      }}
+                    >
                       {letter === " " ? "\u00A0" : letter}
                     </span>
                     {letter !== " " && <span className="underline"></span>}
