@@ -5,10 +5,12 @@ import "./Keyboard.scss";
 
 interface KeyboardProps {
   onClick: (letter: string) => void;
+  correctLetters: string[];
+  incorrectLetters: string[];
 }
 
 const Keyboard = forwardRef<HTMLDivElement, KeyboardProps>(
-  ({ onClick }, ref) => {
+  ({ onClick, correctLetters, incorrectLetters }, ref) => {
     const row1 = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"];
     const row2 = ["A", "S", "D", "F", "G", "H", "J", "K", "L"];
     const row3 = ["Z", "X", "C", "V", "B", "N", "M"];
@@ -24,6 +26,8 @@ const Keyboard = forwardRef<HTMLDivElement, KeyboardProps>(
             <Keycap
               key={index}
               letter={letter}
+              correctLetters={correctLetters}
+              incorrectLetters={incorrectLetters}
               onClick={() => handleClick(letter)}
             />
           ))}
@@ -33,6 +37,8 @@ const Keyboard = forwardRef<HTMLDivElement, KeyboardProps>(
             <Keycap
               key={index}
               letter={letter}
+              correctLetters={correctLetters}
+              incorrectLetters={incorrectLetters}
               onClick={() => handleClick(letter)}
             />
           ))}
@@ -42,6 +48,8 @@ const Keyboard = forwardRef<HTMLDivElement, KeyboardProps>(
             <Keycap
               key={index}
               letter={letter}
+              correctLetters={correctLetters}
+              incorrectLetters={incorrectLetters}
               onClick={() => handleClick(letter)}
             />
           ))}
