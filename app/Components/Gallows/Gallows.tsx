@@ -5,7 +5,7 @@ import "./Gallows.scss";
 
 interface GallowsProps {
   keyboardRef: MutableRefObject<HTMLDivElement | null>;
-  clickedLetter: string;
+  clickedLetter: string | any;
 }
 
 const Gallows = ({ keyboardRef, clickedLetter }: GallowsProps) => {
@@ -16,33 +16,85 @@ const Gallows = ({ keyboardRef, clickedLetter }: GallowsProps) => {
   const [wordInput, setWordInput] = useState(""); // Word inputted in modal form
   const [submittedWord, setSubmittedWord] = useState(""); // Word submitted and later looped over
   const [guessedLetters, setGuessedLetters] = useState<string[]>([]); // State for guessed letters
+  const [correctLetters, setCorrectLetters] = useState<string[]>([]); // State for correct letters
+  const [incorrectLetters, setIncorrectLetters] = useState<string[]>([]); // State for incorrect letters
   const [incorrectStrikes, setIncorrectStrikes] = useState(0);
 
-  let maxInputLength = 30;
-
+  // Handling guesses from clicking Keycap components
   useEffect(() => {
-    if (clickedLetter) {
-      console.log("Letter Clicked:", clickedLetter);
-      // Add the clicked letter to the guessedLetters array
+    if (clickedLetter && submittedWord) {
       setGuessedLetters((prevGuessedLetters) => [
         ...prevGuessedLetters,
         clickedLetter,
       ]);
-    }
 
-    // Increment incorrectStrikes if the clickedLetter is not in submittedWord
-    if (submittedWord && !submittedWord.includes(clickedLetter)) {
-      setIncorrectStrikes((prevStrikes) => prevStrikes + 1);
+      // Check if the clicked letter is in the submitted word
+      if (submittedWord.includes(clickedLetter)) {
+        // Add the clicked letter to the correctLetters array
+        setCorrectLetters((prevCorrectLetters) => [
+          ...prevCorrectLetters,
+          clickedLetter,
+        ]);
+      } else {
+        // Add the clicked letter to the incorrectLetters array
+        setIncorrectLetters((prevIncorrectLetters) => [
+          ...prevIncorrectLetters,
+          clickedLetter,
+        ]);
+
+        // Increment incorrectStrikes
+        setIncorrectStrikes((prevStrikes) => prevStrikes + 1);
+      }
     }
   }, [clickedLetter]);
 
+  // Handling guesses from physically typing
   useEffect(() => {
-    console.log("Guessed Letters:", guessedLetters);
-  }, [guessedLetters]);
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // Check if submittedWord is not empty
+      if (submittedWord) {
+        let typedLetter: string = event.key.toUpperCase(); // Grab the typed letter
+        const isAlphabetic: boolean = /^[a-zA-Z]$/.test(typedLetter); // Ensure it's A-Z
+        if (isAlphabetic) {
+          setGuessedLetters((prevGuessedLetters) => [
+            ...prevGuessedLetters,
+            typedLetter,
+          ]);
+
+          // Check if the typed letter is in the submitted word
+          if (submittedWord.includes(typedLetter)) {
+            // Add the typed letter to the correctLetters array
+            setCorrectLetters((prevCorrectLetters) => [
+              ...prevCorrectLetters,
+              typedLetter,
+            ]);
+          } else {
+            // Add the typed letter to the incorrectLetters array
+            setIncorrectLetters((prevIncorrectLetters) => [
+              ...prevIncorrectLetters,
+              typedLetter,
+            ]);
+
+            // Increment incorrectStrikes
+            setIncorrectStrikes((prevStrikes) => prevStrikes + 1);
+          }
+        }
+      }
+    };
+    document.addEventListener("keydown", handleKeyPress);
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [submittedWord]);
 
   useEffect(() => {
-    console.log("Incorrect Strikes:", incorrectStrikes);
-  }, [incorrectStrikes]);
+    console.clear();
+    console.log("Guessed Letters:", guessedLetters);
+    console.log("Correct Letters:", correctLetters);
+    console.log("Incorrect Letters:", incorrectLetters);
+  }, [guessedLetters, correctLetters, incorrectLetters]);
+
+  let maxInputLength = 30;
 
   const handleBeginClick = () => {
     setShowModal(true);
@@ -128,65 +180,83 @@ const Gallows = ({ keyboardRef, clickedLetter }: GallowsProps) => {
           <div>
             <svg height="300" width="400">
               <g id="body">
-                <g id="head">
-                  <circle
-                    cx="200"
-                    cy="80"
-                    r="20"
+                {/* Head */}
+                {incorrectStrikes >= 1 && (
+                  <g id="head">
+                    <circle
+                      cx="200"
+                      cy="80"
+                      r="20"
+                      stroke="white"
+                      strokeWidth="4"
+                      fill="white"
+                    />
+                    <g id="rEyes">
+                      <circle cx="193" cy="80" r="4" />
+                      <circle cx="207" cy="80" r="4" />
+                    </g>
+                  </g>
+                )}
+                {/* Spine */}
+                {incorrectStrikes >= 2 && (
+                  <line
+                    id="spine"
+                    x1="200"
+                    y1="100"
+                    x2="200"
+                    y2="150"
                     stroke="white"
                     strokeWidth="4"
-                    fill="white"
                   />
-                  <g id="rEyes">
-                    <circle cx="193" cy="80" r="4" />
-                    <circle cx="207" cy="80" r="4" />
-                  </g>
-                </g>
-                <line
-                  id="spine"
-                  x1="200"
-                  y1="100"
-                  x2="200"
-                  y2="150"
-                  stroke="white"
-                  strokeWidth="4"
-                />
-                <line
-                  id="armL"
-                  x1="200"
-                  y1="120"
-                  x2="170"
-                  y2="140"
-                  stroke="white"
-                  strokeWidth="4"
-                />
-                <line
-                  id="armR"
-                  x1="200"
-                  y1="120"
-                  x2="230"
-                  y2="140"
-                  stroke="white"
-                  strokeWidth="4"
-                />
-                <line
-                  id="legL"
-                  x1="200"
-                  y1="150"
-                  x2="180"
-                  y2="190"
-                  stroke="white"
-                  strokeWidth="4"
-                />
-                <line
-                  id="legR"
-                  x1="200"
-                  y1="150"
-                  x2="220"
-                  y2="190"
-                  stroke="white"
-                  strokeWidth="4"
-                />
+                )}
+                {/* Left Arm */}
+                {incorrectStrikes >= 3 && (
+                  <line
+                    id="armL"
+                    x1="200"
+                    y1="120"
+                    x2="170"
+                    y2="140"
+                    stroke="white"
+                    strokeWidth="4"
+                  />
+                )}
+                {/* Right Arm */}
+                {incorrectStrikes >= 4 && (
+                  <line
+                    id="armR"
+                    x1="200"
+                    y1="120"
+                    x2="230"
+                    y2="140"
+                    stroke="white"
+                    strokeWidth="4"
+                  />
+                )}
+                {/* Left Leg */}
+                {incorrectStrikes >= 5 && (
+                  <line
+                    id="legL"
+                    x1="200"
+                    y1="150"
+                    x2="180"
+                    y2="190"
+                    stroke="white"
+                    strokeWidth="4"
+                  />
+                )}
+                {/* Right Leg */}
+                {incorrectStrikes >= 6 && (
+                  <line
+                    id="legR"
+                    x1="200"
+                    y1="150"
+                    x2="220"
+                    y2="190"
+                    stroke="white"
+                    strokeWidth="4"
+                  />
+                )}
               </g>
               {/* End of body */}
               {/* Rest of SVG should STAY */}
