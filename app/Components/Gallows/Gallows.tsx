@@ -6,9 +6,16 @@ import "./Gallows.scss";
 interface GallowsProps {
   keyboardRef: MutableRefObject<HTMLDivElement | null>;
   clickedLetter: string | any;
+  setCorrectLetters: React.Dispatch<React.SetStateAction<string[]>>;
+  setIncorrectLetters: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const Gallows = ({ keyboardRef, clickedLetter }: GallowsProps) => {
+const Gallows = ({
+  keyboardRef,
+  clickedLetter,
+  setCorrectLetters,
+  setIncorrectLetters,
+}: GallowsProps) => {
   const [showModal, setShowModal] = useState(false); // State to toggle modal show
   const [beginButtonVisible, setBeginButtonVisible] = useState(true); // State to show or hide begin button
   const [gameMode, setGameMode] = useState(null); // Single or Multi
@@ -16,13 +23,16 @@ const Gallows = ({ keyboardRef, clickedLetter }: GallowsProps) => {
   const [wordInput, setWordInput] = useState(""); // Word inputted in modal form
   const [submittedWord, setSubmittedWord] = useState(""); // Word submitted and later looped over
   const [guessedLetters, setGuessedLetters] = useState<string[]>([]); // State for guessed letters
-  const [correctLetters, setCorrectLetters] = useState<string[]>([]); // State for correct letters
-  const [incorrectLetters, setIncorrectLetters] = useState<string[]>([]); // State for incorrect letters
   const [incorrectStrikes, setIncorrectStrikes] = useState(0);
 
   // Handling guesses from clicking Keycap components
   useEffect(() => {
     if (clickedLetter && submittedWord) {
+      if (guessedLetters.includes(clickedLetter)) {
+        // If already guessed prevent duplicate processing
+        return;
+      }
+
       setGuessedLetters((prevGuessedLetters) => [
         ...prevGuessedLetters,
         clickedLetter,
@@ -56,6 +66,11 @@ const Gallows = ({ keyboardRef, clickedLetter }: GallowsProps) => {
         let typedLetter: string = event.key.toUpperCase(); // Grab the typed letter
         const isAlphabetic: boolean = /^[a-zA-Z]$/.test(typedLetter); // Ensure it's A-Z
         if (isAlphabetic) {
+          if (guessedLetters.includes(typedLetter)) {
+            // If already guessed prevent duplicate processing
+            return;
+          }
+
           setGuessedLetters((prevGuessedLetters) => [
             ...prevGuessedLetters,
             typedLetter,
@@ -86,13 +101,6 @@ const Gallows = ({ keyboardRef, clickedLetter }: GallowsProps) => {
       document.removeEventListener("keydown", handleKeyPress);
     };
   }, [submittedWord]);
-
-  useEffect(() => {
-    console.clear();
-    console.log("Guessed Letters:", guessedLetters);
-    console.log("Correct Letters:", correctLetters);
-    console.log("Incorrect Letters:", incorrectLetters);
-  }, [guessedLetters, correctLetters, incorrectLetters]);
 
   let maxInputLength = 30;
 
