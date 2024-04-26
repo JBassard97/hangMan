@@ -16,7 +16,7 @@ const Gallows = ({
   setCorrectLetters,
   setIncorrectLetters,
 }: GallowsProps) => {
-  const [showModal, setShowModal] = useState(false); // State to toggle modal show
+  const [showStartModal, setShowStartModal] = useState(false); // State to toggle modal show
   const [beginButtonVisible, setBeginButtonVisible] = useState(true); // State to show or hide begin button
   const [gameMode, setGameMode] = useState(null); // Single or Multi
   const [gameModeSelected, setGameModeSelected] = useState(false); // Did the user select a game mode
@@ -105,15 +105,23 @@ const Gallows = ({
   let maxInputLength = 30;
 
   const handleBeginClick = () => {
-    setShowModal(true);
+    setShowStartModal(true);
     setBeginButtonVisible(false); // Hide the Begin button when clicked
   };
 
   const handleCloseModal = () => {
-    setShowModal(false);
+    setShowStartModal(false);
     setBeginButtonVisible(true);
     setGameMode(null);
     setGameModeSelected(false);
+    setSubmittedWord("");
+    setGuessedLetters([]);
+    setCorrectLetters([]);
+    setIncorrectLetters([]);
+    setIncorrectStrikes(0);
+    if (keyboardRef.current) {
+      keyboardRef.current.style.opacity = "0.1";
+    }
   };
 
   const handleGameModeChange = (mode: any) => {
@@ -125,10 +133,18 @@ const Gallows = ({
     e.preventDefault();
     setSubmittedWord(wordInput.toUpperCase());
     setWordInput("");
-    setShowModal(false);
+    setShowStartModal(false);
     if (keyboardRef.current) {
       keyboardRef.current.style.opacity = "1";
     }
+  };
+
+  const hasWon = () => {
+    // Check if all letters in the submitted word exist in the guessed letters array
+    const allLettersGuessed = submittedWord
+      .split("")
+      .every((letter) => guessedLetters.includes(letter));
+    return incorrectStrikes < 6 && allLettersGuessed;
   };
 
   return (
@@ -138,7 +154,7 @@ const Gallows = ({
           Begin?
         </button>
       )}
-      {showModal && (
+      {showStartModal && (
         <div className="modal-overlay">
           <div className="modal-background" onClick={handleCloseModal} />
           <Modal onClose={handleCloseModal}>
@@ -181,6 +197,12 @@ const Gallows = ({
             )}
           </Modal>
         </div>
+      )}
+
+      {submittedWord && hasWon() && (
+        <Modal onClose={handleCloseModal}>
+          <p>You Won!</p>
+        </Modal>
       )}
 
       {submittedWord && (
