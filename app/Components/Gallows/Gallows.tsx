@@ -2,6 +2,7 @@
 import React, { useState, useEffect, MutableRefObject } from "react";
 import Modal from "../Modal/Modal";
 import "./Gallows.scss";
+import randomWord from "../../utils/randomWord";
 
 interface GallowsProps {
   keyboardRef: MutableRefObject<HTMLDivElement | null>;
@@ -24,6 +25,15 @@ const Gallows = ({
   const [submittedWord, setSubmittedWord] = useState(""); // Word submitted and later looped over
   const [guessedLetters, setGuessedLetters] = useState<string[]>([]); // State for guessed letters
   const [incorrectStrikes, setIncorrectStrikes] = useState(0);
+
+  // useEffect(() => {
+  //   async function test() {
+  //     let word: string = await randomWord(9);
+  //     console.log(word);
+  //   }
+
+  //   test();
+  // }, [])
 
   // Handling guesses from clicking Keycap components
   useEffect(() => {
@@ -129,7 +139,7 @@ const Gallows = ({
     setGameModeSelected(true);
   };
 
-  const handleSubmit = (e: any) => {
+  const handleMultiSubmit = (e: any) => {
     e.preventDefault();
     setSubmittedWord(wordInput.toUpperCase());
     setWordInput("");
@@ -156,7 +166,7 @@ const Gallows = ({
       )}
       {showStartModal && (
         <div className="modal-overlay">
-          <div className="modal-background" onClick={handleCloseModal} />
+          <div className="modal-background" />
           <Modal onClose={handleCloseModal}>
             {!gameModeSelected && (
               <>
@@ -177,7 +187,7 @@ const Gallows = ({
             )}
             {gameMode === "multi" && (
               <div>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleMultiSubmit}>
                   <p>Enter word or phrase ({maxInputLength} characters max)</p>
                   <input
                     type="text"
@@ -202,6 +212,12 @@ const Gallows = ({
       {submittedWord && hasWon() && (
         <Modal onClose={handleCloseModal}>
           <p>You Won!</p>
+        </Modal>
+      )}
+
+      {submittedWord && incorrectStrikes == 6 && (
+        <Modal onClose={handleCloseModal}>
+          <p>You Lost!</p>
         </Modal>
       )}
 
