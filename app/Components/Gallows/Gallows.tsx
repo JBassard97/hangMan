@@ -139,6 +139,10 @@ const Gallows = ({
     }
   };
 
+  const handleSingleSubmode = (submode: string) => {
+    setGameMode(submode);
+  }
+  
   const hasWon = () => {
     // Check if all letters in the submitted word exist in the guessed letters array
     const allLettersGuessed = submittedWord
@@ -170,10 +174,15 @@ const Gallows = ({
             )}
             {gameMode === "single" && (
               <div>
-                {/* Render content for single player mode */}
-                <p>You have chosen single player mode.</p>
-                {/* Add additional content for single player mode */}
+                <button onClick={() => handleSingleSubmode("singleWord")}>Single Word</button>
+                <button onClick={() => handleSingleSubmode("phrase")}>Phrase</button>
               </div>
+            )}
+            {gameMode === "singleWord" && (
+              <p>You've selected a single word</p>
+            )}
+            {gameMode === "phrase" && (
+              <p>You've selected a phrase</p>
             )}
             {gameMode === "multi" && (
               <div>
