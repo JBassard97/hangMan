@@ -25,6 +25,7 @@ const Gallows = ({
   const [submittedWord, setSubmittedWord] = useState(""); // Word submitted and later looped over
   const [guessedLetters, setGuessedLetters] = useState<string[]>([]); // State for guessed letters
   const [incorrectStrikes, setIncorrectStrikes] = useState(0);
+  const [selectedLength, setSelectedLength] = useState(0); // Default value
 
   // useEffect(() => {
   //   async function test() {
@@ -149,13 +150,28 @@ const Gallows = ({
     }
   };
 
-  const handleSingleSubmode = (submode: string) => {
+  const handleSingleSubmit = async (e: any) => {
+    e.preventDefault();
+    if (selectedLength === 0) {
+      setSubmittedWord(await randomWord());
+    }
+
+    setSubmittedWord(await randomWord(selectedLength));
+    setShowStartModal(false);
+    if (keyboardRef.current) {
+      keyboardRef.current.style.opacity = "1";
+    }
+  };
+
+  const handleSingleSubmode = (submode: any) => {
     setGameMode(submode);
-  }
-  
+  };
+
   const hasWon = () => {
     // Check if all letters in the submitted word exist in the guessed letters array
-    const allLettersGuessed = submittedWord
+    const wordWithoutSpaces: string = submittedWord.replace(/\s/g, "");
+
+    const allLettersGuessed = wordWithoutSpaces
       .split("")
       .every((letter) => guessedLetters.includes(letter));
     return incorrectStrikes < 6 && allLettersGuessed;
@@ -184,16 +200,33 @@ const Gallows = ({
             )}
             {gameMode === "single" && (
               <div>
-                <button onClick={() => handleSingleSubmode("singleWord")}>Single Word</button>
-                <button onClick={() => handleSingleSubmode("phrase")}>Phrase</button>
+                <button onClick={() => handleSingleSubmode("singleWord")}>
+                  Single Word
+                </button>
+                <button onClick={() => handleSingleSubmode("phrase")}>
+                  Phrase
+                </button>
               </div>
             )}
             {gameMode === "singleWord" && (
-              <p>You've selected a single word</p>
+              <form onSubmit={handleSingleSubmit}>
+                <label htmlFor="wordLength">Choose Word Length:</label>
+                <select
+                  id="wordLength"
+                  value={selectedLength}
+                  onChange={(e: any) => setSelectedLength(e.target.value)}
+                >
+                  <option value="0">Surprise Me</option>
+                  {[3, 4, 5, 6, 7, 8, 9].map((length) => (
+                    <option key={length} value={length}>
+                      {length}
+                    </option>
+                  ))}
+                </select>
+                <button type="submit">Play!</button>
+              </form>
             )}
-            {gameMode === "phrase" && (
-              <p>You've selected a phrase</p>
-            )}
+            {gameMode === "phrase" && <p>You've selected a phrase</p>}
             {gameMode === "multi" && (
               <div>
                 <form onSubmit={handleMultiSubmit}>
@@ -203,7 +236,13 @@ const Gallows = ({
                     id="wordInput"
                     value={wordInput}
                     maxLength={maxInputLength}
-                    onChange={(e) => setWordInput(e.target.value)}
+                    onChange={(e) => {
+                      const inputValue = e.target.value;
+                      const isValidInput = /^[a-zA-Z\s]*$/.test(inputValue);
+                      if (isValidInput || inputValue === "") {
+                        setWordInput(inputValue);
+                      }
+                    }}
                   />
                   <p>
                     {wordInput.length} / {maxInputLength}
@@ -227,6 +266,8 @@ const Gallows = ({
       {submittedWord && incorrectStrikes == 6 && (
         <Modal onClose={handleCloseModal}>
           <p>You Lost!</p>
+          <p>Correct Answer:</p>
+          {submittedWord}
         </Modal>
       )}
 
