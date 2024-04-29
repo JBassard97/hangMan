@@ -247,7 +247,7 @@ const Gallows = ({
                   <p>
                     {wordInput.length} / {maxInputLength}
                   </p>
-                  <button type="submit" className="multi-submit">
+                  <button type="submit" className="multi-submit" disabled={!wordInput.trim()}>
                     Submit
                   </button>
                 </form>
@@ -274,7 +274,7 @@ const Gallows = ({
       {submittedWord && (
         <>
           <div>
-            <svg height="300" width="400">
+            <svg height="250" width="400">
               <g id="body">
                 {/* Head */}
                 {incorrectStrikes >= 1 && (
