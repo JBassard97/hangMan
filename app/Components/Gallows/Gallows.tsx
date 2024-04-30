@@ -3,6 +3,7 @@ import React, { useState, useEffect, MutableRefObject } from "react";
 import Modal from "../Modal/Modal";
 import "./Gallows.scss";
 import randomWord from "../../utils/randomWord";
+import randomPhrase from "../../utils/randomPhrase";
 
 interface GallowsProps {
   keyboardRef: MutableRefObject<HTMLDivElement | null>;
@@ -26,15 +27,6 @@ const Gallows = ({
   const [guessedLetters, setGuessedLetters] = useState<string[]>([]); // State for guessed letters
   const [incorrectStrikes, setIncorrectStrikes] = useState(0);
   const [selectedLength, setSelectedLength] = useState(0); // Default value
-
-  // useEffect(() => {
-  //   async function test() {
-  //     let word: string = await randomWord(9);
-  //     console.log(word);
-  //   }
-
-  //   test();
-  // }, [])
 
   // Handling guesses from clicking Keycap components
   useEffect(() => {
@@ -163,8 +155,20 @@ const Gallows = ({
     }
   };
 
+  const loadRandomPhrase = () => {
+    setSubmittedWord(randomPhrase());
+    setShowStartModal(false);
+    if (keyboardRef.current) {
+      keyboardRef.current.style.opacity = "1";
+    }
+  };
+
   const handleSingleSubmode = (submode: any) => {
-    setGameMode(submode);
+    if (submode === "singleWord") {
+      setGameMode(submode);
+    } else {
+      loadRandomPhrase();
+    }
   };
 
   const hasWon = () => {
@@ -226,14 +230,14 @@ const Gallows = ({
                 <button type="submit">Play!</button>
               </form>
             )}
-            {gameMode === "phrase" && <p>You've selected a phrase</p>}
+            {/* {gameMode === "phrase" && <p>You've selected a phrase</p>} */}
             {gameMode === "multi" && (
               <div>
                 <form onSubmit={handleMultiSubmit}>
                   <p>Enter word or phrase ({maxInputLength} characters max)</p>
                   <input
                     type="text"
-                    id="wordInput"
+                    className="word-input"
                     value={wordInput}
                     maxLength={maxInputLength}
                     onChange={(e) => {
@@ -247,7 +251,11 @@ const Gallows = ({
                   <p>
                     {wordInput.length} / {maxInputLength}
                   </p>
-                  <button type="submit" className="multi-submit" disabled={!wordInput.trim()}>
+                  <button
+                    type="submit"
+                    className="multi-submit"
+                    disabled={!wordInput.trim()}
+                  >
                     Submit
                   </button>
                 </form>

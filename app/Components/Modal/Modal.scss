@@ -6,7 +6,6 @@
 }
 
 .modal-overlay {
-  @include wireframe;
   position: fixed;
   top: 0;
   left: 0;
@@ -20,7 +19,6 @@
   }
 
   .modal-content {
-    @include wireframe;
     position: absolute;
     top: 43%;
     left: 50%;
@@ -30,7 +28,6 @@
     border-radius: 5px;
 
     .close-button {
-      @include wireframe;
       cursor: pointer;
       position: absolute;
       top: 0;
