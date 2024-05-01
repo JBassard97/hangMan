@@ -1,4 +1,6 @@
-// about.tsx
+"use client";
+
+
 
 export default function RecordsPage() {
   return (

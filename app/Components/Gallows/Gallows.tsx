@@ -4,6 +4,7 @@ import Modal from "../Modal/Modal";
 import "./Gallows.scss";
 import randomWord from "../../utils/randomWord";
 import randomPhrase from "../../utils/randomPhrase";
+import { updatePlayCounts } from "@/app/utils/updatePlayCounts";
 
 interface GallowsProps {
   keyboardRef: MutableRefObject<HTMLDivElement | null>;
@@ -27,6 +28,7 @@ const Gallows = ({
   const [guessedLetters, setGuessedLetters] = useState<string[]>([]); // State for guessed letters
   const [incorrectStrikes, setIncorrectStrikes] = useState(0);
   const [selectedLength, setSelectedLength] = useState(0); // Default value
+  // const [gameStatus, setGameStatus] = useState<string>("");
 
   // Handling guesses from clicking Keycap components
   useEffect(() => {
@@ -134,7 +136,7 @@ const Gallows = ({
 
   const handleMultiSubmit = (e: any) => {
     e.preventDefault();
-    setSubmittedWord(wordInput.toUpperCase());
+    setSubmittedWord(wordInput.toUpperCase().trim());
     setWordInput("");
     setShowStartModal(false);
     if (keyboardRef.current) {
@@ -178,8 +180,18 @@ const Gallows = ({
     const allLettersGuessed = wordWithoutSpaces
       .split("")
       .every((letter) => guessedLetters.includes(letter));
-    return incorrectStrikes < 6 && allLettersGuessed;
+
+    let result = incorrectStrikes < 6 && allLettersGuessed;
+    return result;
   };
+
+  useEffect(() => {
+    if (incorrectStrikes === 6 && submittedWord) {
+      updatePlayCounts("lose");
+    } else if (hasWon() && submittedWord) {
+      updatePlayCounts("win");
+    }
+  }, [guessedLetters]);
 
   return (
     <div className="full-gallows">
