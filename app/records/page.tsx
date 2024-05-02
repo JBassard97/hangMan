@@ -33,6 +33,7 @@ export default function RecordsPage() {
     setGamesPlayed(0);
     setGamesWon(0);
     setGamesLost(0);
+    setGameData(null);
   };
 
   return (
