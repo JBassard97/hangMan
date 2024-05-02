@@ -10,13 +10,18 @@ export default function RecordsPage() {
   const [gamesWon, setGamesWon] = useState<number | any>(null);
   const [gamesLost, setGamesLost] = useState<number | any>(null);
   const [gameData, setGameData] = useState<any>(null);
-  
+
   useEffect(() => {
     setGamesPlayed(getRecords().playCount);
     setGamesWon(getRecords().winCount);
     setGamesLost(getRecords().loseCount);
 
-    setGameData(getGameData().reverse()); // reverse so newest on top
+    async function setData() {
+      let retrievedData: any = await getGameData();
+      setGameData(retrievedData.reverse()); // reverse so newest on top
+    }
+
+    setData();
   }, []);
 
   useEffect(() => {
@@ -77,7 +82,9 @@ export default function RecordsPage() {
           )}
         </div>
 
-        <button className="clear-button" onClick={handleClearRecords}>Clear Records</button>
+        <button className="clear-button" onClick={handleClearRecords}>
+          Clear Records
+        </button>
       </div>
     </>
   );
