@@ -170,6 +170,7 @@ const Gallows = ({
     if (submode === "singleWord") {
       setGameMode(submode);
     } else {
+      setGameMode(submode);
       loadRandomPhrase();
     }
   };

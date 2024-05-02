@@ -2,17 +2,25 @@
 
 import { useEffect, useState } from "react";
 import { getRecords } from "../utils/getRecords";
+import { getGameData } from "../utils/getGameData";
 import "./records.scss";
 
 export default function RecordsPage() {
   const [gamesPlayed, setGamesPlayed] = useState<number | any>(null);
   const [gamesWon, setGamesWon] = useState<number | any>(null);
   const [gamesLost, setGamesLost] = useState<number | any>(null);
+  const [gameData, setGameData] = useState<any>(null);
   useEffect(() => {
     setGamesPlayed(getRecords().playCount);
     setGamesWon(getRecords().winCount);
     setGamesLost(getRecords().loseCount);
+
+    setGameData(getGameData());
   }, []);
+
+  useEffect(() => {
+    console.log(gameData);
+  }, [gameData]);
 
   const handleClearRecords = () => {
     localStorage.clear();
@@ -41,6 +49,33 @@ export default function RecordsPage() {
             %)
           </p>
         </div>
+        <div className="stored-games">
+          {gameData !== null && gameData.length > 0 ? (
+            <table>
+              <thead>
+                <tr>
+                  <th>Word or Phrase</th>
+                  <th>Win or Lose</th>
+                  <th>Game Mode</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody>
+                {gameData.map((game: any, index: number) => (
+                  <tr key={index}>
+                    <td>{game.wordOrPhrase}</td>
+                    <td>{game.winOrLose}</td>
+                    <td>{game.singleOrMulti}</td>
+                    <td>{game.timestamp}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>No game records found.</p>
+          )}
+        </div>
+
         <button onClick={handleClearRecords}>Clear Records</button>
       </div>
     </>
