@@ -10,12 +10,13 @@ export default function RecordsPage() {
   const [gamesWon, setGamesWon] = useState<number | any>(null);
   const [gamesLost, setGamesLost] = useState<number | any>(null);
   const [gameData, setGameData] = useState<any>(null);
+  
   useEffect(() => {
     setGamesPlayed(getRecords().playCount);
     setGamesWon(getRecords().winCount);
     setGamesLost(getRecords().loseCount);
 
-    setGameData(getGameData());
+    setGameData(getGameData().reverse()); // reverse so newest on top
   }, []);
 
   useEffect(() => {
@@ -51,11 +52,11 @@ export default function RecordsPage() {
         </div>
         <div className="stored-games">
           {gameData !== null && gameData.length > 0 ? (
-            <table>
+            <table className="table">
               <thead>
-                <tr>
-                  <th>Word or Phrase</th>
-                  <th>Win or Lose</th>
+                <tr className="top-row">
+                  <th>Word/Phrase</th>
+                  <th>Outcome</th>
                   <th>Game Mode</th>
                   <th>Time</th>
                 </tr>
@@ -63,10 +64,10 @@ export default function RecordsPage() {
               <tbody>
                 {gameData.map((game: any, index: number) => (
                   <tr key={index}>
-                    <td>{game.wordOrPhrase}</td>
-                    <td>{game.winOrLose}</td>
-                    <td>{game.singleOrMulti}</td>
-                    <td>{game.timestamp}</td>
+                    <td className="cell">{game.wordOrPhrase}</td>
+                    <td className="cell">{game.winOrLose}</td>
+                    <td className="cell">{game.singleOrMulti}</td>
+                    <td className="cell">{game.timestamp}</td>
                   </tr>
                 ))}
               </tbody>
@@ -76,7 +77,7 @@ export default function RecordsPage() {
           )}
         </div>
 
-        <button onClick={handleClearRecords}>Clear Records</button>
+        <button className="clear-button" onClick={handleClearRecords}>Clear Records</button>
       </div>
     </>
   );

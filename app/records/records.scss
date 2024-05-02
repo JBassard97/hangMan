@@ -19,4 +19,24 @@
             color: red;
         }
     }
+
+    .stored-games {
+        .table {
+            border: 1px solid white;
+            table-layout: fixed;
+            width: 100%;
+
+            .top-row {
+                
+            }
+
+            .cell {
+                text-align: center;
+            }
+        }
+    }
+
+    .clear-button{
+
+    }
 }
