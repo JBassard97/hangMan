@@ -1,0 +1,22 @@
+.records-page {
+    color: white;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+
+    .stats {
+        .games-played {
+            color: blue;
+        }
+
+        .games-won {
+            color: green;
+        }
+
+        .games-lost {
+            color: red;
+        }
+    }
+}

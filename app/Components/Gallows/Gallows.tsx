@@ -5,6 +5,7 @@ import "./Gallows.scss";
 import randomWord from "../../utils/randomWord";
 import randomPhrase from "../../utils/randomPhrase";
 import { updatePlayCounts } from "@/app/utils/updatePlayCounts";
+import { storeGameData } from "@/app/utils/storeGameData";
 
 interface GallowsProps {
   keyboardRef: MutableRefObject<HTMLDivElement | null>;
@@ -21,7 +22,7 @@ const Gallows = ({
 }: GallowsProps) => {
   const [showStartModal, setShowStartModal] = useState(false); // State to toggle modal show
   const [beginButtonVisible, setBeginButtonVisible] = useState(true); // State to show or hide begin button
-  const [gameMode, setGameMode] = useState(null); // Single or Multi
+  const [gameMode, setGameMode] = useState(""); // Single or Multi
   const [gameModeSelected, setGameModeSelected] = useState(false); // Did the user select a game mode
   const [wordInput, setWordInput] = useState(""); // Word inputted in modal form
   const [submittedWord, setSubmittedWord] = useState(""); // Word submitted and later looped over
@@ -117,7 +118,7 @@ const Gallows = ({
   const handleCloseModal = () => {
     setShowStartModal(false);
     setBeginButtonVisible(true);
-    setGameMode(null);
+    setGameMode("");
     setGameModeSelected(false);
     setSubmittedWord("");
     setGuessedLetters([]);
@@ -188,8 +189,10 @@ const Gallows = ({
   useEffect(() => {
     if (incorrectStrikes === 6 && submittedWord) {
       updatePlayCounts("lose");
+      storeGameData(submittedWord, "lose", gameMode);
     } else if (hasWon() && submittedWord) {
       updatePlayCounts("win");
+      storeGameData(submittedWord, "win", gameMode);
     }
   }, [guessedLetters]);
 
@@ -242,7 +245,6 @@ const Gallows = ({
                 <button type="submit">Play!</button>
               </form>
             )}
-            {/* {gameMode === "phrase" && <p>You've selected a phrase</p>} */}
             {gameMode === "multi" && (
               <div>
                 <form onSubmit={handleMultiSubmit}>
