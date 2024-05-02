@@ -18,7 +18,7 @@ export default function RecordsPage() {
 
     async function setData() {
       let retrievedData: any = await getGameData();
-      setGameData(retrievedData.reverse()); // reverse so newest on top
+      retrievedData ? setGameData(retrievedData.reverse()) : setGameData(null); // reverse so newest on top
     }
 
     setData();
