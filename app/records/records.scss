@@ -1,42 +1,102 @@
 .records-page {
-    color: white;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
+  color: white;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 
-    .stats {
-        .games-played {
-            color: blue;
-        }
-
-        .games-won {
-            color: green;
-        }
-
-        .games-lost {
-            color: red;
-        }
+  .stats {
+    p {
+      margin: 0;
     }
 
-    .stored-games {
-        .table {
-            border: 1px solid white;
-            table-layout: fixed;
-            width: 100%;
+    .games-played {
+      color: blue;
+      font-weight: bold;
+      margin-top: 10px;
+    }
 
-            .top-row {
-                
-            }
+    .sub-modes {
+        font-size: small;
 
-            .cell {
-                text-align: center;
-            }
+      .singleword-games {
+        color: rgb(100, 100, 255);
+      }
+
+      .phrase-games {
+        color: rgb(150, 150, 255);
+      }
+
+      .multi-games {
+        color: rgb(200, 200, 255);
+      }
+    }
+
+    .margin {
+      margin: 10px 0px;
+      font-weight: bold;
+
+      .games-won {
+        color: green;
+      }
+
+      .games-lost {
+        color: red;
+      }
+    }
+  }
+
+  .stored-games {
+    .table {
+      table-layout: fixed;
+      width: 100%;
+
+      thead {
+        background: blue;
+
+        .top-row {
         }
-    }
+      }
+      .game {
+        animation: fade-in 0.5s ease-in-out;
+        animation-fill-mode: both;
+        opacity: 0;
 
-    .clear-button{
+        .cell {
+          text-align: center;
+          background: rgb(11, 19, 19);
+        }
 
+        .word-phrase {
+          cursor: pointer;
+        }
+
+        .win {
+          color: green;
+        }
+
+        .lose {
+          color: red;
+        }
+      }
+      @for $i from 1 through 50 {
+        .game:nth-child(#{$i}) {
+          animation-delay: #{0.1 * $i}s;
+        }
+      }
     }
+  }
+
+  .clear-button {
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
